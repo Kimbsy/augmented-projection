@@ -4,11 +4,11 @@ import java.io.*;
 Server ap_server;
 Client client;
 
-int[] pos1 = {0, 0};
-int[] pos2 = {0, 0};
+float[] pos1 = {0, 0};
+float[] pos2 = {0, 0};
 
 void setup() {
-  size(200, 200);
+  size(640, 480);
   ap_server = new Server(this, 1920);
 }
 
@@ -22,7 +22,6 @@ void draw() {
       String data = client.readStringUntil(';');
 
       if (data != null) {
-        println(data);
         processData(data);
       }
     }
@@ -50,7 +49,7 @@ void processData(String data) {
 
 void processCaptureData(String data) {
   String clean = data.replaceFirst(";", "");
-  int[] split_data = int(split(clean, ','));
+  float[] split_data = float(split(clean, ','));
   pos1 = subset(split_data, 0, 2);
   pos2 = subset(split_data, 2, 2);
 }
