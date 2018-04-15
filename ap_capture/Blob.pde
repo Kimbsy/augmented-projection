@@ -6,12 +6,16 @@ class Blob {
   float maxy;
   
   float d = 40;
+  ArrayList<PVector> points;
   
   Blob(float x, float y) {
     minx = x;
-    maxx = x + 10;
+    maxx = x;
     miny = y;
-    maxy = y + 10; 
+    maxy = y; 
+    
+    points = new ArrayList<PVector>();
+    points.add(new PVector(x, y));
   }
   
   float[] getPos() {
@@ -27,14 +31,30 @@ class Blob {
     maxx = max(maxx, x);
     miny = min(miny, y);
     maxy = max(maxy, y);
+    
+    points.add(new PVector(x, y));
   }
   
-  boolean isNear(float x, float y) {
-    float cx = (minx + maxx) / 2;
-    float cy = (miny + maxy) / 2;
+  boolean contains(float x, float y) {
+    return x < maxx  
+        && x > minx
+        && y < maxy
+        && y > miny;
+  }
+  
+boolean isNear(float x, float y) {
+  for (PVector p : points) {
+    if (distSq(p.x, p.y, x, y) < distanceThresh * distanceThresh) {
+      return true;
+    }
+  }
+  return false;
+  
+    //float cx = (minx + maxx) / 2;
+    //float cy = (miny + maxy) / 2;
     
-    float distance = distSq(cx, cy, x, y);
-    return distance < distanceThresh * distanceThresh;
+    //float distance = distSq(cx, cy, x, y);
+    //return distance < distanceThresh * distanceThresh;
   }
   
   float size() {
@@ -45,5 +65,10 @@ class Blob {
     rectMode(CORNERS);
     fill(255);
     rect(minx, miny, maxx, maxy);
+    
+    fill(0, 0, 255);
+    for (PVector p : points) {
+      point(p.x, p.y);
+    }
   }
 }
